@@ -6,8 +6,8 @@ function App() {
   return (
     <>
       <div className='flex flex-col min-h-screen items-center justify-center gap-5'>
-        <UseState />
-        <ClassState />
+        <UseState name="UserStateName" />
+        <ClassState name="ClassStateName" />
       </div>
     </>
   )
