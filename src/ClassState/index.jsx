@@ -1,10 +1,11 @@
 import React from 'react';
 import { Loading } from './Loading';
-
+const SECURITY_CODE = 'colossus_1989';
 class ClassState extends React.Component {
     constructor(props) {
         super(props),
         this.state = {
+            value:'',
             error:false,
             loading :false,
         };
@@ -34,7 +35,11 @@ class ClassState extends React.Component {
             // vamos a simular una carga de 3 segundos
             setTimeout(() => {
                 console.log('Empezando la validacion');
-                this.setState({loading : false});
+                if(SECURITY_CODE === this.state.value){
+                    this.setState({error:false,loading : false});
+                }else{
+                    this.setState({error:true, loading : false});
+                }
                 console.log('Terminando la validacion');
             }, 3000);
         }
@@ -45,7 +50,7 @@ class ClassState extends React.Component {
             <div className='flex flex-col gap-2 bg-slate-200 py-4 px-4 rounded-sm outline outline-2 outline-gray-400'>
                 <h2 className='text-2xl'>Eliminar {this.props.name}</h2>
                 <p className='text-lg font-semibold'>Por favor, escribe el código de seguridad</p>
-                {this.state.error && (
+                {(this.state.error && !this.state.loading) && (
                     <p className="flex items-center justify-center text-red-500 font-medium">Error: El código es incorrecto</p>
                 )}
                 {this.state.loading && (
@@ -53,10 +58,15 @@ class ClassState extends React.Component {
                     <Loading />
                 )}
                 <div className='flex flex-row gap-4'>
-                    <input className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
-                    <button 
+                    <input 
+                    value={this.state.value}
+                    onChange={(event)=>{
+                        this.setState({value: event.target.value})
+                    }}
+                    className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
+                    {/* <button 
                     onClick={()=> this.setState(prevState => ({error : !prevState.error}))}
-                    className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
+                    className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button> */}
                     <button 
                     onClick={()=> this.setState(prevState => ({loading : !prevState.loading}))}
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
