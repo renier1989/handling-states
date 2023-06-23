@@ -14,20 +14,20 @@ class ClassState extends React.Component {
     // aqui para simular los effectos en las clases de react, se usan los ciclos de vida.
     // aqui hay un aviso que nos dice que debemos renombrar la funcino de componentWillMount => UNSAFE_componenteWillMount
     // componentWillMount(){
-    UNSAFE_componentWillMount(){
-        // este se ejecuta primero 
-        console.log('componentWillMount');
-    }
+    // UNSAFE_componentWillMount(){
+    //     // este se ejecuta primero 
+    //     console.log('componentWillMount');
+    // }
     
-    componentDidMount(){
-        // este se ejecura segundo
-        console.log('componentDidMount');
-    }
+    // componentDidMount(){
+    //     // este se ejecura segundo
+    //     console.log('componentDidMount');
+    // }
 
-    componentWillUnmount(){
-        // este se ejecura cuando el componente se va a desmontar
-        console.log('componentWillUnmount');
-    }
+    // componentWillUnmount(){
+    //     // este se ejecura cuando el componente se va a desmontar
+    //     console.log('componentWillUnmount');
+    // }
 
     componentDidUpdate(){
         console.log('Actaualizacion');
