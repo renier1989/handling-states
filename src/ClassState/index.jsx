@@ -1,11 +1,43 @@
 import React from 'react';
+import { Loading } from './Loading';
 
 class ClassState extends React.Component {
     constructor(props) {
         super(props),
         this.state = {
             error:false,
+            loading :false,
         };
+    }
+
+    // aqui para simular los effectos en las clases de react, se usan los ciclos de vida.
+    // aqui hay un aviso que nos dice que debemos renombrar la funcino de componentWillMount => UNSAFE_componenteWillMount
+    // componentWillMount(){
+    UNSAFE_componentWillMount(){
+        // este se ejecuta primero 
+        console.log('componentWillMount');
+    }
+    
+    componentDidMount(){
+        // este se ejecura segundo
+        console.log('componentDidMount');
+    }
+
+    componentWillUnmount(){
+        // este se ejecura cuando el componente se va a desmontar
+        console.log('componentWillUnmount');
+    }
+
+    componentDidUpdate(){
+        console.log('Actaualizacion');
+        if(this.state.loading){
+            // vamos a simular una carga de 3 segundos
+            setTimeout(() => {
+                console.log('Empezando la validacion');
+                this.setState({loading : false});
+                console.log('Terminando la validacion');
+            }, 3000);
+        }
     }
 
     render(){
@@ -16,10 +48,17 @@ class ClassState extends React.Component {
                 {this.state.error && (
                     <p className="flex items-center justify-center text-red-500 font-medium">Error: El código es incorrecto</p>
                 )}
+                {this.state.loading && (
+                    // <p className="flex items-center justify-center text-indigo-500 font-medium">Cargando....</p>
+                    <Loading />
+                )}
                 <div className='flex flex-row gap-4'>
                     <input className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
                     <button 
                     onClick={()=> this.setState(prevState => ({error : !prevState.error}))}
+                    className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
+                    <button 
+                    onClick={()=> this.setState(prevState => ({loading : !prevState.loading}))}
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
                 </div>
             </div>
