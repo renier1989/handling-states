@@ -16,61 +16,18 @@ function UseReducer({name}) {
 
     const [state, dispatch] = React.useReducer(reducer, initialState)
 
-    // const onComplete = ()=>{
-    //     setState({
-    //         ...state,
-    //         error:false,
-    //         loading:false,
-    //         deleted: true,
-    //         confirm:false
-    //     });
-    // }
+    // AQUI VAMOS A CAMBIAR A ALGO MAS DECLARATICO CON LOS ACTION CREATORS USAR LOS ACTIONTYPES
+    const onConfirm = ()=>dispatch({type: actionTypes.confirm});
+    const onError = ()=>dispatch({type: actionTypes.error});
+    const onCheck= ()=>dispatch({type: actionTypes.check});
+    const onDelete = ()=>dispatch({type: actionTypes.delete});
+    const onBack= () => dispatch({type: actionTypes.back});
+    const onRestart = () => dispatch({type: actionTypes.restart})
 
-    // const onError = ()=>{
-    //     setState({
-    //         ...state,
-    //         error:true,
-    //         loading:false
-    //     });
-    // }
+    const onWrite = (event)=>{
+        dispatch({type: actionTypes.write, payload:event.target.value});
+    }
 
-    // const onWrite = (newValue)=>{
-    //     setState({
-    //         ...state,
-    //         value: newValue
-    //     })
-    // }
-
-    // const onCheck= ()=>{
-    //     setState({
-    //         ...state,
-    //         loading: !state.loading
-    //     })
-    // }
-
-    // const onDelete = ()=>{
-    //     setState({
-    //         ...state,
-    //         confirmed:true
-    //     })
-    // }
-
-    // const onBack= () => {
-    //     setState({
-    //         ...state,
-    //         deleted: false,
-    //         value: ''
-    //     })
-    // }
-
-    // const onRestart = () => {
-    //     setState({
-    //         ...state,
-    //         confirmed:false,
-    //         deleted: false,
-    //         value: ''
-    //     })
-    // }
 
     console.log(state);
 
@@ -83,27 +40,19 @@ function UseReducer({name}) {
     // el segundo es la mas importante , es la que nos determina cuando se ejecutara la funcion
     // React.useEffect(()=>{}, []);
     React.useEffect(()=>{
-        console.log('Empazando el Effect REDUCER');
-
         // comprobamos cuando el estado de loading sea realmente true para ejecutar la validacion 
         if(state.loading){
             // vamos a simular una carga de 3 segundos
-            
             setTimeout(() => {
-                console.log('Empezando la validacion REDUCER');
                 if(state.value === SECURITY_CODE){
-                    dispatch({type:'CONFIRM'});
-                    // onComplete();                    
+                    onConfirm();
                 }else{
-                    dispatch({type:'ERROR'});
-                    // onError();
+                    onError();
                 }
-
                 // setLoading(false);
-                console.log('Terminando la validacion REDUCER');
             }, 3000);
         }
-        console.log('Terminando el Effect REDUCER');
+        
     }, [state.loading]);
 
 
@@ -121,18 +70,11 @@ function UseReducer({name}) {
                 )}
     
                 <div className='flex flex-row gap-4 '>
-                    <input value={state.value} onChange={((event)=>{
-                        dispatch({type:'WRITE', payload: event.target.value});
-                        // onWrite(event.target.value);
-                        // setValue(event.target.value);
-                    })} className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
+                    <input value={state.value} onChange={onWrite} 
+                    className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
                     {/* <button onClick={()=>setError(!error)} className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button> */}
                     <button 
-                    onClick={()=>{
-                        dispatch({type:'CHECK'});
-                        // onCheck();                        
-                        }
-                    } 
+                    onClick={onCheck} 
                     // onClick={()=>setLoading(!state.loading)} 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
                 </div>
@@ -145,18 +87,10 @@ function UseReducer({name}) {
                 <p className='text-lg font-semibold'>Por favor, Confirme si realmente desea elminar este estado. ¿Segur@?</p>
                 <div className='flex flex-row gap-4 items-center justify-center'>
                     <button 
-                    onClick={()=>{ 
-                        dispatch({type:'DELETE'});
-                        // onDelete();
-                        }
-                    } 
+                    onClick={onDelete} 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Si, Eliminar</button>
                     <button 
-                    onClick={()=>{
-                        dispatch({type:'BACK'});
-                        // onBack();
-                    }
-                } 
+                    onClick={onBack} 
                     className='p-2 rounded-sm outline outline-2 outline-pink-600 hover:bg-pink-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-red-900 transition duration-200'>No, Volver</button>
                 </div>
             </div>
@@ -168,11 +102,7 @@ function UseReducer({name}) {
                 <p className='text-2xl font-semibold'>Gracias por usar esta Aplicación</p>
                 <div className='flex flex-row gap-4 items-center justify-center'>
                     <button 
-                    onClick={()=>{
-                        dispatch({type:'RESTART'});
-                        // onRestart(); 
-                    }
-                    } 
+                    onClick={onRestart} 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Iniciar todo</button>
                 </div>
             </div>
@@ -182,7 +112,7 @@ function UseReducer({name}) {
 }
 
 const initialState = {
-    value : 'colossus_1989',
+    value : '',
     error: false,
     loading : false,
     deleted : false, // estado para pasar a la vista de eliminacion y pregunta por confirmacion
@@ -229,39 +159,50 @@ const initialState = {
 //     }
 // }
 
+// PODERMOS CREAR ACTIONTYPES PARA LA AYUDA DE DEFINIR LOS NOMBRES QUE USARAN LAS ACTIONS.
+const actionTypes = {
+    confirm : 'CONFIRM',
+    error : 'ERROR',
+    check: 'CHECK',
+    delete : 'DELETE',
+    write: 'WRITE',
+    back: 'BACK',
+    restart: 'RESTART',
+}
+
 // FORMA DE CREAR REDUCER CON OBJETOS , (FORMA ALTERNATIVA Y MAS ELEGANTE)
 // en esta forma solo preguntamos por los estados, las encerramos en () para hacer un return directo 
 const reducerObject = (state, payload)=>({
-    'CONFIRM': {
+    [actionTypes.confirm]: {
         ...state,
         error:false,
         loading:false,
         deleted: true,
         confirm:false
     },
-    'DELETE': {
+    [actionTypes.delete]: {
         ...state,
         confirmed:true
     },
-    'WRITE':{
+    [actionTypes.write]:{
         ...state,
         value: payload
     },
-    'ERROR': {
+    [actionTypes.error]: {
         ...state,
         error:true,
         loading:false
     },
-    'CHECK': {
+    [actionTypes.check]: {
         ...state,
         loading: true
     },
-    'BACK':{
+    [actionTypes.back]:{
         ...state,
         deleted: false,
         value: ''
     },
-    'RESTART' : {
+    [actionTypes.restart] : {
         ...state,
         confirmed:false,
         deleted: false,
