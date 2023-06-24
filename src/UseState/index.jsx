@@ -13,6 +13,62 @@ function UseState({name}) {
         confirmed : false, // esato para pasar a la visra de eliminacion correcta
     });
 
+    const onComplete = ()=>{
+        setState({
+            ...state,
+            error:false,
+            loading:false,
+            deleted: true,
+            confirm:false
+        });
+    }
+
+    const onError = ()=>{
+        setState({
+            ...state,
+            error:true,
+            loading:false
+        });
+    }
+
+    const onWrite = (newValue)=>{
+        setState({
+            ...state,
+            value: newValue
+        })
+    }
+
+    const onCheck= ()=>{
+        setState({
+            ...state,
+            loading: !state.loading
+        })
+    }
+
+    const onDelete = ()=>{
+        setState({
+            ...state,
+            confirmed:true
+        })
+    }
+
+    const onBack= () => {
+        setState({
+            ...state,
+            deleted: false,
+            value: ''
+        })
+    }
+
+    const onRestart = () => {
+        setState({
+            ...state,
+            confirmed:false,
+            deleted: false,
+            value: ''
+        })
+    }
+
     console.log(state);
 
     // const [error , setError] = React.useState(false);
@@ -33,21 +89,9 @@ function UseState({name}) {
             setTimeout(() => {
                 console.log('Empezando la validacion');
                 if(state.value === SECURITY_CODE){
-                    setState({
-                        ...state,
-                        error:false,
-                        loading:false,
-                        deleted: true,
-                        confirm:false
-                    });
-                    
+                    onComplete();                    
                 }else{
-                    setState({
-                        ...state,
-                        error:true,
-                        loading:false
-                    });
-
+                    onError();
                 }
 
                 // setLoading(false);
@@ -73,18 +117,15 @@ function UseState({name}) {
     
                 <div className='flex flex-row gap-4 '>
                     <input value={state.value} onChange={((event)=>{
-                        setState({
-                            ...state,
-                            value: event.target.value
-                        })
+                        onWrite(event.target.value);
                         // setValue(event.target.value);
                     })} className="outline outline-2 outline-gray-400 p-1 rounded-sm" placeholder='Código de seguridad' />
                     {/* <button onClick={()=>setError(!error)} className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button> */}
                     <button 
-                    onClick={()=>setState({
-                        ...state,
-                        loading: !state.loading
-                    })} 
+                    onClick={()=>{
+                        onCheck();                        
+                        }
+                    } 
                     // onClick={()=>setLoading(!state.loading)} 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Comprobar</button>
                 </div>
@@ -97,17 +138,16 @@ function UseState({name}) {
                 <p className='text-lg font-semibold'>Por favor, Confirme si realmente desea elminar este estado. ¿Segur@?</p>
                 <div className='flex flex-row gap-4 items-center justify-center'>
                     <button 
-                    onClick={()=>setState({
-                        ...state,
-                        confirmed:true
-                    })} 
+                    onClick={()=>{ 
+                        onDelete();
+                        }
+                    } 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Si, Eliminar</button>
                     <button 
-                    onClick={()=>setState({
-                        ...state,
-                        deleted: false,
-                        value: ''
-                    })} 
+                    onClick={()=>{
+                        onBack();
+                    }
+                } 
                     className='p-2 rounded-sm outline outline-2 outline-pink-600 hover:bg-pink-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-red-900 transition duration-200'>No, Volver</button>
                 </div>
             </div>
@@ -119,12 +159,10 @@ function UseState({name}) {
                 <p className='text-2xl font-semibold'>Gracias por usar esta Aplicación</p>
                 <div className='flex flex-row gap-4 items-center justify-center'>
                     <button 
-                    onClick={()=>setState({
-                        ...state,
-                        confirmed:false,
-                        deleted: false,
-                        value: ''
-                    })} 
+                    onClick={()=>{
+                        onRestart();
+                    }
+                    } 
                     className='p-2 rounded-sm outline outline-2 outline-green-600 hover:bg-green-700 hover:bg-opacity-70 hover:text-white font-semibold hover:outline-green-900 transition duration-200'>Iniciar todo</button>
                 </div>
             </div>
